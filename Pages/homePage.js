@@ -23,6 +23,12 @@ class Homepage {
     listYourPropertyLocator = '//a[@data-stid="listYourProperty-link"]';
     supportBtnLocator = '//a[@data-stid="support-cs-link"]';
 
+    // date container locators
+    dateBtnLocator = '//button[@data-stid="uitk-date-selector-input1-default"]';
+    dateBackBtn = '//button[@data-stid="uitk-calendar-navigation-controls-previous-button"]';
+    dateNextBtn = '//button[@data-stid="uitk-calendar-navigation-controls-next-button"]';
+
+
     // functions to interact with the elements on homepage
     async clickSigninLinkLocator() {
         await $(this.signinLinkLocator).waitForClickable();
