@@ -24,11 +24,15 @@ class Homepage {
     supportBtnLocator = '//a[@data-stid="support-cs-link"]';
 
     // date container locators
-    dateBtnLocator = '//button[@data-stid="uitk-date-selector-input1-default"]';
-    dateBackBtn = '//button[@data-stid="uitk-calendar-navigation-controls-previous-button"]';
-    dateNextBtn = '//button[@data-stid="uitk-calendar-navigation-controls-next-button"]';
+    datesBtnLocator = '//button[@data-stid="uitk-date-selector-input1-default"]';
+    dateBackBtnLocator = '//button[@data-stid="uitk-calendar-navigation-controls-previous-button"]';
+    dateNextBtnLocator = '//button[@data-stid="uitk-calendar-navigation-controls-next-button"]';
 
+    leftDisplayedMonthLocator = '//span[text()="January 2024"]';
 
+    leftDatesLocator = '//table[@aria-label="January 2024"]//div[starts-with(@class,"uitk-date-number")]';
+
+    rightDatesLocator = '//table[@aria-label="February 2024"]//div[starts-with(@class,"uitk-date-number")]'
     // functions to interact with the elements on homepage
     async clickSigninLinkLocator() {
         await $(this.signinLinkLocator).waitForClickable();
@@ -155,6 +159,113 @@ class Homepage {
     async clickSupportBtn() {
         await $(this.supportBtnLocator).waitForClickable();
         await $(this.supportBtnLocator).click()
+    }
+
+    async clickDatesButton() {
+        await $(this.datesBtnLocator).waitForClickable();
+        await $(this.datesBtnLocator).click();
+    }
+
+    async clickBackDateButton() {
+        await $(this.dateBackBtnLocator).waitForClickable();
+        await $(this.dateBackBtnLocator).click();
+    }
+
+    async clickNextDateButton() {
+        await $(this.dateNextBtnLocator).waitForClickable();
+        await $(this.dateNextBtnLocator).click();
+    }
+
+    async getLeftDisplayedMonth() {
+        const textLeftMonth = await $(this.leftDisplayedMonthLocator);
+        return await textLeftMonth.getText();
+    }
+
+    async navigateToCurrentMonth() {
+        const currentMonth = moment().format('MMMM YYYY');
+    let displayedMonth;
+
+    // Maximum number of attempts to find the current month
+    const maxAttempts = 12;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        displayedMonth = await this.getCurrentMonth();
+  
+        if (currentMonth === displayedMonth) {
+          console.log('Current month found:', currentMonth);
+          return;
+        }
+
+        // If the current month is not found, navigate to the next or previous month
+        const currentMonthDate = moment(displayedMonth, 'MMMM YYYY');
+        const isCurrentMonthAfter = currentMonthDate.isAfter(moment(), 'month');
+
+        // Use the appropriate button based on whether the current month is after or before
+      const buttonLocator = isCurrentMonthAfter ? this.dateBackBtnLocator : this.dateNextBtnLocator;
+
+      await $(buttonLocator).click();
+      await browser.pause(1000);
+
+    }
+    }
+
+    // async selectLeftDate(targetDate) {
+    //     const allLeftDates = await $$(this.leftDatesLocator);
+
+    //     for (const leftDate of allLeftDates) {
+    //         const dateValue = await leftDate.getText();
+    //         if( dateValue == targetDate) {
+    //             await leftDate.click();
+    //             break;
+    //         }
+    //     }
+    // }
+
+    // async selectRightDate(targetDate) {
+    //     const allRightDates = await $$(this.rightDatesLocator);
+
+    //     for (const rightDate of allRightDates) {
+    //         const dateValue = await rightDate.getText();
+    //         if( dateValue == targetDate) {
+    //             await rightDate.click();
+    //             break;
+    //         }
+    //     }
+    // }
+
+    async selectDate(dateToSelect) {
+        const date = dateToSelect.split(' ')[0];
+        const monthYear = dateToSelect.split(' ')[1] + ' ' + dateToSelect.split(' ')[2];
+
+        const dateOptions = await $$(`//table[@aria-label="${monthYear}"]//div[starts-with(@class,"uitk-date-number")]`);
+        for (const dateElement of dataOptions) {
+            const dateText = await dateElement.getText();
+            if(dateText == date) {
+                await dateElement.click();
+                break;
+            }
+        }
+    }
+
+    async isPastDatesEnabled() {
+        const dateCells = await $$(this.leftDatesLocator);
+
+        const currentDate = moment();
+        // Iterate through date cells and check if each past date is disabled
+    for (const dateCell of dateCells) {
+        const dateText = await dateCell.getText();
+        const date = moment(dateText, 'DD');
+        
+        if (date.isBefore(currentDate, 'day')) {
+            const isDisabled = !(await dateCell.isEnabled());
+            expect(isDisabled).to.be.true;
+        }
+    }
+    }
+
+    async isBackButtonDisabled() {
+        const backButton = await $(this.dateBackBtnLocator);
+        const isDisabled = !(await backButton.isEnabled());
+        expect(isDisabled).to.be.true;
     }
 }
 

@@ -91,7 +91,7 @@ Scenario Outline: Verify user can submit feedback after completing the feedback 
     Then User verifies "THANK YOU FOR YOUR FEEDBACK" is displayed
     When clicks on CLOSE THIS WINDOW button
 
-@TC-25
+@TC-17
 Scenario Outline: Verify past dates and back button on Current month's calendar is disabled
 
     When User clicks on Dates 

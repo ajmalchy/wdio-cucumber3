@@ -5,6 +5,7 @@ const listYourPropertyPage = require("../Pages/listYourPropertyPage");
 const privateResidencePage = require("../Pages/privateResidencePage");
 const csPage = require("../Pages/csPage");
 const siteFeedback = require("../Pages/siteFeedback");
+const moment = require("moment");
 
 Given(/^User launches the Hotels website$/, async () => {
     await browser.url('https://www.hotels.com/')
@@ -340,4 +341,31 @@ Then(/^User verifies THANK YOU FOR YOUR FEEDBACK is displayed$/, async () => {
 
 When(/^clicks on CLOSE THIS WINDOW button$/, async () => {
     await siteFeedback.clickCloseWindow();
+ })
+
+ When(/^User clicks on Dates$/, async () => {
+    await homePage.clickDatesButton();
+})
+
+When(/^User navigates to the current month (if not displayed)$/, async () => {
+    
+    // work in progress
+    const currentMonth = moment().format('MMMM YYYY');
+    const displayedMonth = await homePage.getLeftDisplayedMonth();
+
+    if ( currentMonth !== displayedMonth) {
+    await homePage.navigateToCurrentMonth()
+    } else return;
+})
+
+Then(/^User verifies past dates (if any) are disabled)$/, async () => {
+    
+   await homePage.isPastDatesDisplayed();
+  
+})
+
+Then(/^User verifies the back button on the current month is disabled)$/, async () => {
+    
+    await homePage.isBackButtonDisabled();
+   
  })
