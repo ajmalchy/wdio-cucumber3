@@ -5,7 +5,20 @@ class Homepage {
     travelersButtonLocator = '//button[@data-stid="open-room-picker"]'
     childrenBtnPlusLocator = '//input[@id="traveler_selector_children_step_input-0"]/following-sibling::button';
     childrenBtnMinusLocator = '//input[@id="traveler_selector_children_step_input-0"]/preceding-sibling::button';
+    
     allChildDropdownLocators = '//select[@class="uitk-field-select"]';
+
+    // //select[@class="uitk-field-select"]//preceding-sibling::label[text()="Child 1 age"]
+    dropDownFieldLocator_starts = '//select[@class="uitk-field-select"]//preceding-sibling::label[text()="';
+
+    dropDownFieldLocator_ends = '"]'
+    travelersDoneBtnLocator = '//button[@id="traveler_selector_done_button"]';
+
+    totalTravelersLocator = '//button[@data-stid="open-room-picker"]';
+    
+    // //select[@class="uitk-field-select"]//option[text()="1"]
+    dropDownOptions_start = '//select[@class="uitk-field-select"]//option[text()="';
+    dropDownOptions_end = '"]';
     childrenNumberLocator = '//input[@id="traveler_selector_children_step_input-0"]';
 
     languageBtnLocator = '//button[@data-stid="button-type-picker-trigger"]';
@@ -33,6 +46,17 @@ class Homepage {
     leftDatesLocator = '//table[@aria-label="January 2024"]//div[starts-with(@class,"uitk-date-number")]';
 
     rightDatesLocator = '//table[@aria-label="February 2024"]//div[starts-with(@class,"uitk-date-number")]'
+
+    dateOptions_Start =  '//table[@aria-label="';
+    dateOptions_End = '"]//div[starts-with(@class,"uitk-date-number")]';
+
+    adultBtnPlsLocator = '//input[@aria-label="Adults"]/following-sibling::button';
+
+    adultNumberLocator = '//input[@aria-label="Adults"]';
+
+    adultBtnMinusLocator = '//input[@aria-label="Adults"]/preceding-sibling::button';
+
+
     // functions to interact with the elements on homepage
     async clickSigninLinkLocator() {
         await $(this.signinLinkLocator).waitForClickable();
@@ -232,12 +256,14 @@ class Homepage {
     //     }
     // }
 
+  
+
     async selectDate(dateToSelect) {
         const date = dateToSelect.split(' ')[0];
         const monthYear = dateToSelect.split(' ')[1] + ' ' + dateToSelect.split(' ')[2];
-
-        const dateOptions = await $$(`//table[@aria-label="${monthYear}"]//div[starts-with(@class,"uitk-date-number")]`);
-        for (const dateElement of dataOptions) {
+//   new technique -  joining string
+        const dateOptions = await $$(this.dateOptions_Start + monthYear + this.dateOptions_End);
+        for (const dateElement of dateOptions) {
             const dateText = await dateElement.getText();
             if(dateText == date) {
                 await dateElement.click();
@@ -267,6 +293,56 @@ class Homepage {
         const isDisabled = !(await backButton.isEnabled());
         expect(isDisabled).to.be.true;
     }
-}
+
+
+    async getAdultNumberValue() {
+        await browser.pause(5000);
+
+        await $(this.adultNumberLocator).waitForDisplayed;
+        const adultNumberInput = await $(this.adultNumberLocator);
+        const numberOfAdultText = await adultNumberInput.getAttribute("value");
+        console.log(`\n\n\nnumberOfChildrenText = ${numberOfAdultText}`);
+        await browser.pause(10000);
+        const actualadultNumber = parseInt(numberOfAdultText);
+        return actualadultNumber;
+    }
+
+    async clickAdultBtnPlus() {
+        await $(this.adultBtnPlsLocator).waitForClickable;
+        await $(this.adultBtnPlsLocator).click();
+        await browser.pause(2000);
+    }
+    async clickAdultBtnMinus() {
+        await $(this.adultBtnMinusLocator).waitForClickable;
+        await $(this.adultBtnMinusLocator).click();
+        await browser.pause(2000);
+    }
+
+    async selectChildAgeDropdown(childNumber, age) {
+        const dropDownOptions = await $$(this.dropDownFieldLocator_starts + childNumber + this.dropDownFieldLocator_ends);
+        for (const dropDownElement of dropDownOptions) {
+            const dropDownText = await dropDownElement.getText();
+            if(dropDownText == childNumber) {
+                await dropDownElement.click();
+            const optionFromDropdown = 
+            await $(this.dropDownOptions_start + age + this.dropDownOptions_end) ;
+            const optionSelected = await await optionFromDropdown.selectByVisibleText(age);
+            break;
+            }
+        }
+    }
+
+    async clickTravelersDoneButton() {
+        await $(this.travelersButtonLocator).waitForClickable();
+        await $(this.travelersButtonLocator).click();
+    }
+
+    async getTotalNumberOfTravelers() {
+        const totalNumberOfTravelers = await $(totalTravelersLocator).getText();
+        return totalNumberOfTravelers;
+    }
+    }
+
+
 
 module.exports = new Homepage;

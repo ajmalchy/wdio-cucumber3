@@ -339,7 +339,7 @@ Then(/^User verifies THANK YOU FOR YOUR FEEDBACK is displayed$/, async () => {
     return;
 })
 
-When(/^clicks on CLOSE THIS WINDOW button$/, async () => {
+When(/^User clicks on CLOSE THIS WINDOW button$/, async () => {
     await siteFeedback.clickCloseWindow();
  })
 
@@ -369,3 +369,60 @@ Then(/^User verifies the back button on the current month is disabled)$/, async 
     await homePage.isBackButtonDisabled();
    
  })
+
+ When(/^User selects Adults as (\d+)$/, async (adultCount) => {
+    // Code to select the specified number of adults
+    let previousAdultsCount;
+
+    previousAdultsCount = await homePage.getAdultNumberValue();
+    console.log(previousAdultsCount);
+    if (previousAdultsCount == 0) {
+        for (let i = 0; i < adultCount; i++) {
+            await homePage.clickAdultBtnPlus();
+        }
+    } else if
+        (previousAdultsCount < adultCount) {
+        const toIncrease = adultCount - previousAdultsCount;
+        for (let i = 0; i < toIncrease; i++) {
+            await homePage.clickAdultBtnPlus();
+        }
+    }
+    else {
+        const toDecrease = previousAdultsCount - adultCount;
+        for (let i = 0; i < toDecrease; i++) {
+            await homePage.clickAdultBtnMinus();
+        }
+
+    }
+
+
+});
+
+When(/^User selects "Child (\d+) age" (\d+|Under 1)$/, async (childNumber, age) => {
+    await homePage.selectChildAgeDropdown(childNumber, age);
+
+})
+
+When(/^User clicks Done$/, async () => {
+    await homePage.clickTravelersButton();
+})
+
+Then(/^Verify total number of Travelers is sum of Adults and children as same as selected$/, async () => {
+    // work in progress
+    
+    const adultsCount = await homePage.getAdultNumberValue();
+    const childrenCount = await homePage.getChildrenNumberValue();
+
+    const totalNumberOfTravelers = await homePage.getTotalNumberOfTravelers();
+
+    // Use a regular expression to extract the numeric value
+    const match = totalTravelersAttribute.match(/(\d+)\s+travelers/);
+    // Use a regular expression to extract the numeric value
+    
+    // Ensure the match is found and extract the numeric value
+    const actualTotal = match ? parseInt(match[1]) : NaN;
+    const expectedTotal = adultsCount + childrenCount;
+
+    // Compare the actual and expected total
+    expect(actualTotal).to.equal(expectedTotal);
+})

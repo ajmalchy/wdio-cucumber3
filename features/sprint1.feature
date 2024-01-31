@@ -89,7 +89,7 @@ Scenario Outline: Verify user can submit feedback after completing the feedback 
     And User selects any "EASE OF USE" rating
     And User clicks on Submit button
     Then User verifies "THANK YOU FOR YOUR FEEDBACK" is displayed
-    When clicks on CLOSE THIS WINDOW button
+    When User clicks on CLOSE THIS WINDOW button
 
 @TC-17
 Scenario Outline: Verify past dates and back button on Current month's calendar is disabled
@@ -98,3 +98,20 @@ Scenario Outline: Verify past dates and back button on Current month's calendar 
     And User navigates to the current month (if not displayed)
     Then User verifies past dates (if any) are disabled
     And User verifies the back button on the current month is disabled
+
+
+@TC-28
+Scenario Outline: Verify Child-age dropdowns are same as number of Children selected
+
+    When User clicks on the Travelers button
+    And User selects Adults as 6
+    And User selects Children as 3 
+    And User selects "Child (\d+) age" 4
+    And User selects "Child (\d+) age" age 7
+    And User selects "Child (\d+) age" age "Under 1"
+    And User clicks Done
+
+      # wip
+    Then Verify total number of Travelers is sum of Adults and children as same as selected
+
+    
