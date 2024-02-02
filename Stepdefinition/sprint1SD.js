@@ -6,12 +6,15 @@ const privateResidencePage = require("../Pages/privateResidencePage");
 const csPage = require("../Pages/csPage");
 const siteFeedback = require("../Pages/siteFeedback");
 const moment = require("moment");
+const signupPage = require("../Pages/signupPage");
+const oneKeyPage = require("../Pages/oneKeyPage");
+const privacyPage = require("../Pages/privacyPage");
 
 Given(/^User launches the Hotels website$/, async () => {
     await browser.url('https://www.hotels.com/')
 });
 
-When(/^User clicks on the "Sign in" link$/, async () => {
+When(/^User clicks on the Sign in link$/, async () => {
     await homePage.clickSigninLinkLocator();
 });
 
@@ -426,3 +429,51 @@ Then(/^Verify total number of Travelers is sum of Adults and children as same as
     // Compare the actual and expected total
     expect(actualTotal).to.equal(expectedTotal);
 })
+
+When(/^User clicks on the "([^"]*)" link$/, async () => {
+    
+    const allHandles = await browser.getWindowHandles();
+
+    for (const handle of allHandles) {
+        await browser.switchToHandle(handle);
+
+        const title = await browser.getTitle();
+        if (title.includes('One Key Terms')) {
+            await signupPage.clickOneKeyRewardsLink();
+
+        }
+        else if (title.includes('Deals & Discounts')) {
+            await signupPage.clickPrivacyLink();
+        }
+        else return;
+      
+    }
+    
+    
+});
+
+Then(/^User verifies that "([^"]*)" heading is displayed)$/, async () => {
+    const allHandles = await browser.getWindowHandles();
+
+    for (const handle of allHandles) {
+        await browser.switchToHandle(handle);
+
+        const title = await browser.getTitle();
+        if (title.includes('One Key Terms')) {
+
+            const isOneKeyHeadingDisplayed = await oneKeyPage.isOneKeyHeadingDisplayed();
+            
+            expect(isOneKeyHeadingDisplayed).to.be.true();
+            return;
+
+        }
+        else if (title.includes('Deals & Discounts')) {
+            const isPrivacyHeadingDisplayed = await 
+            privacyPage.isPrivacyHeadingDisplayed();
+            
+            expect(isPrivacyHeadingDisplayed).to.be.true();
+            return; 
+        }
+      await browser.pause(5000);
+    }
+ })
