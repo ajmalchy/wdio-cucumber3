@@ -477,3 +477,38 @@ Then(/^User verifies that "([^"]*)" heading is displayed)$/, async () => {
       await browser.pause(5000);
     }
  })
+
+ Then(/^User verifies that "([^"]*)" date format is in the correct format$/, async () => {
+    const allHandles = await browser.getWindowHandles();
+
+    for (const handle of allHandles) {
+        await browser.switchToHandle(handle);
+
+        const title = await browser.getTitle();
+        if (title.includes('One Key Terms')) {
+
+           const actualEffectiveDate = await oneKeyPage.getEffectiveDate();
+
+           const expectedFormat = 'MMMM D, YYYY';
+        // Use Moment.js to parse and validate the date format
+        const parsedDate = moment(actualEffectiveDate, expectedFormat, true);
+
+        // Verify if the date is in the correct format
+        expect(parsedDate.isValid(), `Date "${actualEffectiveDate}" is not in the expected format: ${expectedFormat}`).to.be.true;
+        return;
+        }
+        else if (title.includes('Deals & Discounts')) {
+            const actualUpdatedDate = await privacyPage.getLastUpdatedDate();
+
+            const expectedFormat = 'MMMM D, YYYY';
+         // Use Moment.js to parse and validate the date format
+         const parsedDate = moment(actualUpdatedDate, expectedFormat, true);
+ 
+         // Verify if the date is in the correct format
+         expect(parsedDate.isValid(), `Date "${actualUpdatedDate}" is not in the expected format: ${expectedFormat}`).to.be.true;
+            return; 
+        }
+        
+     
+    }
+ })

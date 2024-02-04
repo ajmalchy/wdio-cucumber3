@@ -122,10 +122,10 @@ Scenario Outline: Verify TermsAndConditions link and PrivacyStatements link open
     And User clicks on the Sign in button 
     And User clicks on the "One Key Rewards Terms & Conditions" link
     Then User verifies that "One Key Terms and Conditions" heading is displayed
-    # wip
-    And User verifies that "Effective from" date format is in the correct format (expected format: MMMM d, yyyy)
-
-    When User clicks on the "Privacy Statement" link
     
+    And User verifies that "Effective from" date format is in the correct format (expected format: MMMM d, yyyy)
+    
+    When User clicks on the "Privacy Statement" link
     Then User verifies that "Privacy Statement" heading is displayed
+    
     And User verifies that "Last Updated" date format is in the correct format (expected format: MMMM d, yyyy)
