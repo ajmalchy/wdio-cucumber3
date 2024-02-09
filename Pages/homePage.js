@@ -5,7 +5,7 @@ class Homepage {
     travelersButtonLocator = '//button[@data-stid="open-room-picker"]'
     childrenBtnPlusLocator = '//input[@id="traveler_selector_children_step_input-0"]/following-sibling::button';
     childrenBtnMinusLocator = '//input[@id="traveler_selector_children_step_input-0"]/preceding-sibling::button';
-    
+
     allChildDropdownLocators = '//select[@class="uitk-field-select"]';
 
     // //select[@class="uitk-field-select"]//preceding-sibling::label[text()="Child 1 age"]
@@ -15,7 +15,7 @@ class Homepage {
     travelersDoneBtnLocator = '//button[@id="traveler_selector_done_button"]';
 
     totalTravelersLocator = '//button[@data-stid="open-room-picker"]';
-    
+
     // //select[@class="uitk-field-select"]//option[text()="1"]
     dropDownOptions_start = '//select[@class="uitk-field-select"]//option[text()="';
     dropDownOptions_end = '"]';
@@ -47,7 +47,7 @@ class Homepage {
 
     rightDatesLocator = '//table[@aria-label="February 2024"]//div[starts-with(@class,"uitk-date-number")]'
 
-    dateOptions_Start =  '//table[@aria-label="';
+    dateOptions_Start = '//table[@aria-label="';
     dateOptions_End = '"]//div[starts-with(@class,"uitk-date-number")]';
 
     adultBtnPlsLocator = '//input[@aria-label="Adults"]/following-sibling::button';
@@ -56,7 +56,18 @@ class Homepage {
 
     adultBtnMinusLocator = '//input[@aria-label="Adults"]/preceding-sibling::button';
 
+    searchLocationLocator = '//button[@data-stid="destination_form_field-menu-trigger"]';
+    locationInputLocator = '//input[@data-stid="destination_form_field-menu-input"]';
 
+    autoSuggestionOption1Locator = '(//ul[@data-stid="destination_form_field-results"]//button)[1]';
+
+    allAutoSuggestionOptions = '//ul[@data-stid="destination_form_field-results"]//button';
+
+    calendarDoneBtnLocator = '//button[@data-stid="apply-date-selector"]';
+
+    searchBtnLocator = '//button[@id="search_button"]';
+
+    
     // functions to interact with the elements on homepage
     async clickSigninLinkLocator() {
         await $(this.signinLinkLocator).waitForClickable();
@@ -74,6 +85,15 @@ class Homepage {
         await $(this.travelersButtonLocator).click();
     }
 
+    async clickCalendarDoneButton() {
+        await $(this.calendarDoneBtnLocator).waitForClickable();
+        await $(this.calendarDoneBtnLocator).click();
+    }
+
+    async clickSearchButton() {
+        await $(this.searchBtnLocator).waitForClickable();
+        await $(this.searchBtnLocator).click();
+    }
 
 
     async getChildrenNumberValue() {
@@ -207,29 +227,29 @@ class Homepage {
 
     async navigateToCurrentMonth() {
         const currentMonth = moment().format('MMMM YYYY');
-    let displayedMonth;
+        let displayedMonth;
 
-    // Maximum number of attempts to find the current month
-    const maxAttempts = 12;
-    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
-        displayedMonth = await this.getCurrentMonth();
-  
-        if (currentMonth === displayedMonth) {
-          console.log('Current month found:', currentMonth);
-          return;
+        // Maximum number of attempts to find the current month
+        const maxAttempts = 12;
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            displayedMonth = await this.getCurrentMonth();
+
+            if (currentMonth === displayedMonth) {
+                console.log('Current month found:', currentMonth);
+                return;
+            }
+
+            // If the current month is not found, navigate to the next or previous month
+            const currentMonthDate = moment(displayedMonth, 'MMMM YYYY');
+            const isCurrentMonthAfter = currentMonthDate.isAfter(moment(), 'month');
+
+            // Use the appropriate button based on whether the current month is after or before
+            const buttonLocator = isCurrentMonthAfter ? this.dateBackBtnLocator : this.dateNextBtnLocator;
+
+            await $(buttonLocator).click();
+            await browser.pause(1000);
+
         }
-
-        // If the current month is not found, navigate to the next or previous month
-        const currentMonthDate = moment(displayedMonth, 'MMMM YYYY');
-        const isCurrentMonthAfter = currentMonthDate.isAfter(moment(), 'month');
-
-        // Use the appropriate button based on whether the current month is after or before
-      const buttonLocator = isCurrentMonthAfter ? this.dateBackBtnLocator : this.dateNextBtnLocator;
-
-      await $(buttonLocator).click();
-      await browser.pause(1000);
-
-    }
     }
 
     // async selectLeftDate(targetDate) {
@@ -256,16 +276,16 @@ class Homepage {
     //     }
     // }
 
-  
+
 
     async selectDate(dateToSelect) {
         const date = dateToSelect.split(' ')[0];
         const monthYear = dateToSelect.split(' ')[1] + ' ' + dateToSelect.split(' ')[2];
-//   new technique -  joining string
+        //   new technique -  joining string
         const dateOptions = await $$(this.dateOptions_Start + monthYear + this.dateOptions_End);
         for (const dateElement of dateOptions) {
             const dateText = await dateElement.getText();
-            if(dateText == date) {
+            if (dateText == date) {
                 await dateElement.click();
                 break;
             }
@@ -277,15 +297,15 @@ class Homepage {
 
         const currentDate = moment();
         // Iterate through date cells and check if each past date is disabled
-    for (const dateCell of dateCells) {
-        const dateText = await dateCell.getText();
-        const date = moment(dateText, 'DD');
-        
-        if (date.isBefore(currentDate, 'day')) {
-            const isDisabled = !(await dateCell.isEnabled());
-            expect(isDisabled).to.be.true;
+        for (const dateCell of dateCells) {
+            const dateText = await dateCell.getText();
+            const date = moment(dateText, 'DD');
+
+            if (date.isBefore(currentDate, 'day')) {
+                const isDisabled = !(await dateCell.isEnabled());
+                expect(isDisabled).to.be.true;
+            }
         }
-    }
     }
 
     async isBackButtonDisabled() {
@@ -322,12 +342,12 @@ class Homepage {
         const dropDownOptions = await $$(this.dropDownFieldLocator_starts + childNumber + this.dropDownFieldLocator_ends);
         for (const dropDownElement of dropDownOptions) {
             const dropDownText = await dropDownElement.getText();
-            if(dropDownText == childNumber) {
+            if (dropDownText == childNumber) {
                 await dropDownElement.click();
-            const optionFromDropdown = 
-            await $(this.dropDownOptions_start + age + this.dropDownOptions_end) ;
-            const optionSelected = await await optionFromDropdown.selectByVisibleText(age);
-            break;
+                const optionFromDropdown =
+                    await $(this.dropDownOptions_start + age + this.dropDownOptions_end);
+                const optionSelected = await await optionFromDropdown.selectByVisibleText(age);
+                break;
             }
         }
     }
@@ -341,7 +361,40 @@ class Homepage {
         const totalNumberOfTravelers = await $(totalTravelersLocator).getText();
         return totalNumberOfTravelers;
     }
+
+    async clickSearchLocation() {
+        await $(this.searchLocationLocator).waitForDisplayed();
+        await $(this.searchLocationLocator).waitForClickable();
+        await $(this.searchLocationLocator).click();
     }
+
+    async enterLocation(destinationString) {
+        await $(this.searchLocationLocator).click();
+        await $(this.locationInputLocator).setValue(destinationString);
+    }
+
+    async selectFromAutoSuggestion(searchLocation) {
+        await browser.waitUntil(
+            async () => await browser.$(this.autoSuggestionOption1Locator).isDisplayed(),
+            {
+                timeout: 5000,
+                timeoutMsg: "Autosuggestion list did not appear"
+            }
+        );
+        const autoSuggestionOptions = await browser.$$(this.allAutoSuggestionOptions);
+
+        for (const option of autoSuggestionOptions) {
+            const attributeValue = await option.getAttribute('aria-label');
+
+            if (attributeValue === searchLocation) {
+                await option.click();
+                return;
+            }
+        }
+    }
+
+
+}
 
 
 

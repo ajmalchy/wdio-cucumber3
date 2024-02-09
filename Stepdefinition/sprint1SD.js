@@ -9,6 +9,7 @@ const moment = require("moment");
 const signupPage = require("../Pages/signupPage");
 const oneKeyPage = require("../Pages/oneKeyPage");
 const privacyPage = require("../Pages/privacyPage");
+const destinationPage = require("../Pages/destinationPage");
 
 Given(/^User launches the Hotels website$/, async () => {
     await browser.url('https://www.hotels.com/')
@@ -512,3 +513,69 @@ Then(/^User verifies that "([^"]*)" heading is displayed)$/, async () => {
      
     }
  })
+
+ When(/^User enters (.+) and selects (.+) from autosuggestion$/, async (destinationString, searchLocation) => {
+    
+   
+    await homePage.enterLocation(destinationString);
+    
+
+    // select from auto suggestion
+
+    await homePage.selectFromAutoSuggestion(searchLocation);
+});
+
+When(/^User enters Check-in date as (\d+) days from the current date$/, async (daysToAdd) => {
+    // click date
+    await homePage.clickNextDateButton();
+
+    // Convert daysToAdd to a number
+    const daysToAddNumber = parseInt(daysToAdd);
+
+     // Calculate the number of months and remaining days
+     const monthsToAdd = Math.floor(daysToAddNumber / 30); // Assuming each month has 30 days
+     const remainingDays = daysToAddNumber % 30;
+ 
+     // Click the next button on the calendar to navigate ahead by the calculated number of months
+     for (let i = 0; i < monthsToAdd; i++) {
+         await homePage.clickNextDateButton();
+     }
+
+    // Calculate the target date by adding the remaining days to the current date
+    const checkInDate = moment().add(remainingDays, 'days');
+
+    // Format the target date
+    const checkInDateFormatted = checkInDate.format('D, MMMM, YYYY'); 
+
+    // Use your function to select the Check-in date
+    await homePage.selectDate(checkInDateFormatted);
+});
+
+When(/^User enters Check-out date as (\d+) days from the Check-in date$/, async () => {
+    
+   // Convert daysToAdd to a number
+   const daysToAddNumber = parseInt(daysToAdd);
+
+   // Calculate the Check-out date by adding the daysToAdd to the selected Check-in date
+   const checkOutDate = moment(checkInDate).add(daysToAddNumber, 'days');
+
+   // Format the Check-out date
+   const checkOutDateFormatted = checkOutDate.format('D, MMMM, YYYY'); 
+
+   // Use your function to select the Check-out date
+   await homePage.selectDate(checkOutDateFormatted);
+    // user clicks on doen btn
+    await homePage.clickCalendarDoneButton();   
+});
+
+When(/^User clicks on the Search button$/, async () => {
+    
+     // user clicks on search btn
+     await homePage.clickSearchButton();   
+ });
+
+ When(/^User clicks on (\d+) star-rating filter$/, async (rating) => {
+    
+    // user clicks on star rating
+    await destinationPage.clickStarRating(rating);   
+}); 

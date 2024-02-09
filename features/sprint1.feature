@@ -126,3 +126,21 @@ Scenario Outline: Verify TermsAndConditions link and PrivacyStatements link open
     When User clicks on the "Privacy Statement" link
     Then User verifies that "Privacy Statement" heading is displayed
     And User verifies that "Last Updated" date format is in the correct format
+
+
+@TC-23
+Scenario Outline: Verify filter-by and sort-by functionality works as expected
+
+    When User enters boston and selects Boston Massachusetts, United States from autosuggestion
+
+    And User enters Check-in date as 37 days from the current date 
+    And User enters Check-out date as 7 days from the Check-in date
+
+    And User clicks on the Search button
+
+    And User clicks on 5 star-rating filter 
+    
+    And User selects "Price - Low to High" from the sort-by dropdown
+    
+    # Then User verifies that all hotels in the search results have a star-rating of 5
+    # And User verifies that all hotels are listed in increasing order of price
