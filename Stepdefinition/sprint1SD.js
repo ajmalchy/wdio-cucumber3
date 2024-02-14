@@ -527,7 +527,7 @@ Then(/^User verifies that "([^"]*)" heading is displayed)$/, async () => {
 
 When(/^User enters Check-in date as (\d+) days from the current date$/, async (daysToAdd) => {
     // click date
-    await homePage.clickNextDateButton();
+    // await homePage.clickNextDateButton();
 
     // Convert daysToAdd to a number
     const daysToAddNumber = parseInt(daysToAdd);
@@ -551,7 +551,7 @@ When(/^User enters Check-in date as (\d+) days from the current date$/, async (d
     await homePage.selectDate(checkInDateFormatted);
 });
 
-When(/^User enters Check-out date as (\d+) days from the Check-in date$/, async () => {
+When(/^User enters Check-out date as (\d+) days from the Check-in date$/, async (daysToAdd) => {
     
    // Convert daysToAdd to a number
    const daysToAddNumber = parseInt(daysToAdd);
@@ -564,7 +564,7 @@ When(/^User enters Check-out date as (\d+) days from the Check-in date$/, async 
 
    // Use your function to select the Check-out date
    await homePage.selectDate(checkOutDateFormatted);
-    // user clicks on doen btn
+    // user clicks on done btn
     await homePage.clickCalendarDoneButton();   
 });
 
@@ -574,8 +574,15 @@ When(/^User clicks on the Search button$/, async () => {
      await homePage.clickSearchButton();   
  });
 
- When(/^User clicks on (\d+) star-rating filter$/, async (rating) => {
+When(/^User clicks on (\d+) star-rating filter$/, async (rating) => {
     
     // user clicks on star rating
     await destinationPage.clickStarRating(rating);   
+}); 
+
+When(/^User selects "([^"]*)" from the sort-by dropdown$/, async (option) => {
+     // Click to open the sort-by dropdown
+    await destinationPage.clickSortByBtn();
+    await destinationPage.selectFromSortByDropdown(option);
+    
 }); 

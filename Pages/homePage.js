@@ -392,7 +392,7 @@ class Homepage {
             }
         }
     }
-
+    
 
 }
 
