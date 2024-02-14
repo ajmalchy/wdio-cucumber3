@@ -67,8 +67,14 @@ class Homepage {
 
     searchBtnLocator = '//button[@id="search_button"]';
 
-    
+    // get the app locator
+    getTheAppLinkLocator = '//a[@data-context="global_navigation"]//div[text()="Get the app"]';
     // functions to interact with the elements on homepage
+    async clickGetTheAppLink() {
+        await $(this.getTheAppLinkLocator).waitForClickable();
+        await $(this.getTheAppLinkLocator).click()
+    }
+
     async clickSigninLinkLocator() {
         await $(this.signinLinkLocator).waitForClickable();
         await $(this.signinLinkLocator).click()

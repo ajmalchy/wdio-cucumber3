@@ -144,3 +144,11 @@ Scenario Outline: Verify filter-by and sort-by functionality works as expected
     
     # Then User verifies that all hotels in the search results have a star-rating of 5
     # And User verifies that all hotels are listed in increasing order of price
+
+@TC-30
+Scenario Outline: Verify Get the app section
+
+    When User clicks "Get the app" button
+    Then User verifies that "Scan the QR code and download our app" is displayed
+    Then User verifies that QR code is displayed
+    

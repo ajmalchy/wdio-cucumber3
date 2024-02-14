@@ -10,6 +10,7 @@ const signupPage = require("../Pages/signupPage");
 const oneKeyPage = require("../Pages/oneKeyPage");
 const privacyPage = require("../Pages/privacyPage");
 const destinationPage = require("../Pages/destinationPage");
+const appPage = require("../Pages/appPage");
 
 Given(/^User launches the Hotels website$/, async () => {
     await browser.url('https://www.hotels.com/')
@@ -475,6 +476,13 @@ Then(/^User verifies that "([^"]*)" heading is displayed)$/, async () => {
             expect(isPrivacyHeadingDisplayed).to.be.true();
             return; 
         }
+        else if (title.includes('Rewards')) {
+            const isScanQrCodeDisplayed = await 
+            appPage.isScanQrCodeHeadingDisplayed();
+            
+            expect(isScanQrCodeDisplayed).to.be.true();
+            return; 
+        }
       await browser.pause(5000);
     }
  })
@@ -586,3 +594,22 @@ When(/^User selects "([^"]*)" from the sort-by dropdown$/, async (option) => {
     await destinationPage.selectFromSortByDropdown(option);
     
 }); 
+
+When(/^User clicks "([^"]*)" button$/, async (btnName) => {
+   
+    switch (btnName) {
+        case 'Get the app':
+            await homePage.clickGetTheAppLink();
+            await browser.pause(5000);
+            break;
+    }
+   
+}); 
+
+Then(/^User verifies that QR code is displayed)$/, async () => {
+    const isQrCodeDisplayed = await 
+    appPage.isQrCodeDisplayed();
+    expect(isQrCodeDisplayed).to.be.true();
+    return; 
+    
+ })
