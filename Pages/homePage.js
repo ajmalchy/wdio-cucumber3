@@ -69,6 +69,9 @@ class Homepage {
 
     // get the app locator
     getTheAppLinkLocator = '//a[@data-context="global_navigation"]//div[text()="Get the app"]';
+
+    // Month header locator
+    monthHeaderLocator = 'monthHeaderLocator';
     // functions to interact with the elements on homepage
     async clickGetTheAppLink() {
         await $(this.getTheAppLinkLocator).waitForClickable();
@@ -399,7 +402,13 @@ class Homepage {
         }
     }
     
+    async getMonthHeader() {
+        const monthHeaderElement = await $(this.monthHeaderLocator);
+        const MonthHeaderText = await monthHeaderElement.getText();
 
+        const MonthHeader = MonthHeaderText.split[0];
+        return MonthHeader;
+    }
 }
 
 

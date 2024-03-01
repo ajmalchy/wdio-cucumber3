@@ -11,7 +11,7 @@ const oneKeyPage = require("../Pages/oneKeyPage");
 const privacyPage = require("../Pages/privacyPage");
 const destinationPage = require("../Pages/destinationPage");
 const appPage = require("../Pages/appPage");
-
+let checkInDate;
 Given(/^User launches the Hotels website$/, async () => {
     await browser.url('https://www.hotels.com/')
 });
@@ -534,15 +534,36 @@ Then(/^User verifies that "([^"]*)" heading is displayed)$/, async () => {
 });
 
 When(/^User enters Check-in date as (\d+) days from the current date$/, async (daysToAdd) => {
+    // Get current date
+    const currentDate = moment();
+    // Calculate check-in date by adding days to the current date
+    const checkInDate = currentDate.clone().add(daysToAdd, 'days');
+
+    // Get the expected month from the check-in date
+    const expectedMonth = checkInDate.format('MMMM');
+
+     // Loop to navigate to the correct month
+     for (let i = 0; i < 12; i++) {
+        const currentMonthHeader = await getMonthHeader();
+        if (currentMonthHeader.trim() === expectedMonth) {
+            break; // Exit the loop if the month header matches
+        } else {
+            await homePage.clickNextDateButton(); // Click next month button
+        }
+    }
+
+    // Once the correct month is displayed, select the date
+    await selectDate(checkInDate.format('D MMMM YYYY'));
+    /*
     // click date
     // await homePage.clickNextDateButton();
 
     // Convert daysToAdd to a number
-    const daysToAddNumber = parseInt(daysToAdd);
+    // const daysToAddNumber = parseInt(daysToAdd);
 
      // Calculate the number of months and remaining days
      const monthsToAdd = Math.floor(daysToAddNumber / 30); // Assuming each month has 30 days
-     const remainingDays = daysToAddNumber % 30;
+     const remainingDays = daysToAdd % 30;
  
      // Click the next button on the calendar to navigate ahead by the calculated number of months
      for (let i = 0; i < monthsToAdd; i++) {
@@ -550,30 +571,40 @@ When(/^User enters Check-in date as (\d+) days from the current date$/, async (d
      }
 
     // Calculate the target date by adding the remaining days to the current date
-    const checkInDate = moment().add(remainingDays, 'days');
+    checkInDate = moment().add(remainingDays, 'days');
 
     // Format the target date
     const checkInDateFormatted = checkInDate.format('D, MMMM, YYYY'); 
 
     // Use your function to select the Check-in date
     await homePage.selectDate(checkInDateFormatted);
+
+    */
 });
 
 When(/^User enters Check-out date as (\d+) days from the Check-in date$/, async (daysToAdd) => {
     
-   // Convert daysToAdd to a number
-   const daysToAddNumber = parseInt(daysToAdd);
+    // Calculate check-out date by adding days to the check-in date
+    const checkOutDate = checkInDate.clone().add(daysToAdd, 'days');
 
-   // Calculate the Check-out date by adding the daysToAdd to the selected Check-in date
-   const checkOutDate = moment(checkInDate).add(daysToAddNumber, 'days');
+    // Get the expected month from the check-out date
+    const expectedMonth = checkOutDate.format('MMMM');
 
-   // Format the Check-out date
-   const checkOutDateFormatted = checkOutDate.format('D, MMMM, YYYY'); 
+     // Loop to navigate to the correct month
+     for (let i = 0; i < 12; i++) {
+        const currentMonthHeader = await getMonthHeader();
+        if (currentMonthHeader.trim() === expectedMonth) {
+            break; // Exit the loop if the month header matches
+        } else {
+            await homePage.clickNextDateButton(); // Click next month button
+        }
+        // Once the correct month is displayed, select the date
+        await selectDate(checkOutDate.format('D MMMM YYYY'));
 
-   // Use your function to select the Check-out date
-   await homePage.selectDate(checkOutDateFormatted);
-    // user clicks on done btn
-    await homePage.clickCalendarDoneButton();   
+   
+        // user clicks on done btn
+        await homePage.clickCalendarDoneButton();   
+}
 });
 
 When(/^User clicks on the Search button$/, async () => {
@@ -611,5 +642,4 @@ Then(/^User verifies that QR code is displayed)$/, async () => {
     appPage.isQrCodeDisplayed();
     expect(isQrCodeDisplayed).to.be.true();
     return; 
-    
  })
