@@ -152,3 +152,21 @@ Scenario Outline: Verify Get the app section
     Then User verifies that "Scan the QR code and download our app" is displayed
     Then User verifies that QR code is displayed
     
+
+@TC-71
+Scenario Outline: Verify Share Feedback button is displayed at the end of search results
+
+    When User enters bora and selects Bora Bora, Leeward Islands, French Polynesia from autosuggestion
+    And User clicks on the Search button
+    Then User verifies that text Tell us how we can improve our site is displayed
+    And User verifies that the Share Feedback Button is enabled
+
+# wip
+@TC-72
+Scenario Outline: Verify Reasons to download our app section
+
+    When User clicks "Get the app" button
+    And User scrolls to Reasons to download our app
+    Then User verifies that Reasons to download our app is displayed
+    And User verifies icon, header and sub-header for the reasons
+# wip

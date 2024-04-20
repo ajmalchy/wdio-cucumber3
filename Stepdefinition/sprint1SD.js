@@ -643,3 +643,15 @@ Then(/^User verifies that QR code is displayed)$/, async () => {
     expect(isQrCodeDisplayed).to.be.true();
     return; 
  })
+
+ Then(/^User verifies that text Tell us how we can improve our site is displayed$/, async () => {
+    await browser.pause(5000);
+    const istellUsHowWeCanImproveTextDisplayed = await destinationPage.isTellUsHowWeCanImproveTextDisplayed();
+    expect(istellUsHowWeCanImproveTextDisplayed).to.be.true;
+});
+
+Then(/^User verifies that the Share Feedback Button is enabled)$/, async () => {
+    
+    await destinationPage.isShareFeedBackButtonEnabled();
+   
+ })
