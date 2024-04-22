@@ -161,12 +161,46 @@ Scenario Outline: Verify Share Feedback button is displayed at the end of search
     Then User verifies that text Tell us how we can improve our site is displayed
     And User verifies that the Share Feedback Button is enabled
 
-# wip
-@TC-72
+
+@TC-72 
 Scenario Outline: Verify Reasons to download our app section
 
     When User clicks "Get the app" button
     And User scrolls to Reasons to download our app
     Then User verifies that Reasons to download our app is displayed
-    And User verifies icon, header and sub-header for the reasons
-# wip
+    And User verifies "Stay informed" is displayed
+    And User verifies "Conveniently access your itinerary without wifi" is displayed
+    And User verifies "Save even more" is displayed
+    And User verifies "Receive discounts on select hotels in the app" is displayed
+    And User verifies "Plan trips on the go" is displayed
+    And User verifies "Book anytime, anywhere at the last minute" is displayed
+    And User verifies header "Get rewarded" is displayed
+    And User verifies "Find app-exclusive offers and perks for members" is displayed
+    # icon locator cant be ientified
+    # more efficient way to verify the headers
+
+
+@TC-73
+Scenario Outline: Verify Shop Travel options are enabled
+    When User clicks Shop travel link
+    Then User verifies that option "Deals" under Shop travel are enabled
+    And User verifies that option "Vacation rentals" under Shop travel are enabled
+    And User verifies that option "Groups & meetings" under Shop travel are enabled
+    And User verifies that option "Gifts Cards" under Shop travel are enabled
+    And User verifies that option "Hotels.com Magazine" under Shop travel are enabled
+
+    # any better way to complete this
+
+@TC-74
+Scenario Outline: Verify the links on Support Screen
+
+Click on “Support” link
+Verify “Welcome to Help Center” heading is displayed
+Verify all links under “Refunds and Charges” heading are enabled
+Verify all links under “Lodging” heading are enabled
+Verify all links under “Car” heading are enabled
+Verify all links under “Account” heading are enabled
+Verify all links under “Privacy” heading are enabled
+Verify all links under “Security” heading are enabled
+Verify all links under “Travel Alerts” heading are enabled
+Verify all links under “Loyalty & Rewards” heading are enabled

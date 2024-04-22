@@ -72,6 +72,12 @@ class Homepage {
 
     // Month header locator
     monthHeaderLocator = 'monthHeaderLocator';
+
+    shopTravelBtnLocator = '//button[@title="Shop travel"]';
+
+    shopTravelDropdownOptionsLocator_Start = '//a[@aria-label="';
+
+    shopTravelDropdownOptionsLocator_End = '"]';
     // functions to interact with the elements on homepage
     async clickGetTheAppLink() {
         await $(this.getTheAppLinkLocator).waitForClickable();
@@ -408,6 +414,23 @@ class Homepage {
 
         const MonthHeader = MonthHeaderText.split[0];
         return MonthHeader;
+    }
+
+    async clickShopTravelButton() {
+        await $(this.shopTravelBtnLocator).waitForClickable();
+        await $(this.shopTravelBtnLocator).click();
+    }
+
+    async isShopTravelOptionEnabled(option) {
+        
+
+        // Locate the specified option
+        const shopTravelOptionElement = await $(this.shopTravelDropdownOptionsLocator_Start + option + this.shopTravelDropdownOptionsLocator_End);
+
+        // Check if the option is enabled
+        const isShopTravelOptionEnabled = await shopTravelOptionElement.isEnabled();
+
+        return isShopTravelOptionEnabled;
     }
 }
 

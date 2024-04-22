@@ -644,14 +644,43 @@ Then(/^User verifies that QR code is displayed)$/, async () => {
     return; 
  })
 
- Then(/^User verifies that text Tell us how we can improve our site is displayed$/, async () => {
+Then(/^User verifies that text Tell us how we can improve our site is displayed$/, async () => {
     await browser.pause(5000);
     const istellUsHowWeCanImproveTextDisplayed = await destinationPage.isTellUsHowWeCanImproveTextDisplayed();
     expect(istellUsHowWeCanImproveTextDisplayed).to.be.true;
 });
 
-Then(/^User verifies that the Share Feedback Button is enabled)$/, async () => {
-    
+Then(/^User verifies that the Share Feedback Button is enabled)$/, async () => { 
     await destinationPage.isShareFeedBackButtonEnabled();
-   
- })
+})
+
+When(/^User scrolls to Reasons to download our app$/, async () => {
+   await appPage.scrollToReasonsToDownloadApp();
+}); 
+
+Then(/^User verifies that Reasons to download our app is displayed$/, async () => {
+    
+    await browser.pause(5000);
+    const isReasonsToDownloadAppTextDisplayed = await appPage.isReasonsToDownloadAppTextDisplayed();
+    expect(isReasonsToDownloadAppTextDisplayed).to.be.true;
+});
+
+Then(/^User verifies "([^"]*)" is displayed$/, async (text) => {
+    // Call the function to check if the specified option is enabled
+    const isTextElementDisplayed = await appPage.isTextDisplayed(text);
+
+    // Verify that the option is enabled
+    expect(isTextElementDisplayed).to.be.true(`Option "${text}" under Shop travel is not enabled.`);
+});
+
+When(/^User clicks Shop travel link$/, async () => {
+    await homePage.clickTravelersButton();
+})
+
+Then(/^User verifies that option "([^"]*)" under Shop travel are enabled$/, async (option) => {
+    // Call the function to check if the specified option is enabled
+    const isShopTravelOptionEnabled = await homePage.isShopTravelOptionEnabled(option);
+
+    // Verify that the option is enabled
+    expect(isShopTravelOptionEnabled).to.be.true(`Option "${option}" under Shop travel is not enabled.`);
+});
