@@ -194,8 +194,37 @@ Scenario Outline: Verify Shop Travel options are enabled
 @TC-74
 Scenario Outline: Verify the links on Support Screen
 
-Click on “Support” link
-Verify “Welcome to Help Center” heading is displayed
+    When User clicks on Support
+
+    Then User verifies Welcome to Help Center heading is displayed
+
+    When User clicks More btn under "Refund and Charges" heading
+
+    Then User verifies that link Refund timeliness, policies & processes is enabled
+    And User verifies that link Get a receipt for your booking is enabled 
+    And User verifies that link Payment security and options is enabled 
+    And User verifies that link Troubleshoot declined payments is enabled 
+    And User verifies that link Pending charges is enabled
+
+    When User clicks More btn under "Lodging" heading   
+
+    Then User verifies that link Change your hotel or vacation rental booking is enabled
+    And User verifies that link Cancel your hotel or vacation rental booking is enabled
+    And User verifies that link Check in and out of your hotel or vacation rental is enabled
+    And User verifies that link Make special requests when booking a hotel is enabled
+    And User verifies that link Promotions and discounts is enabled
+    And User verifies that link Use a promotional coupon is enabled
+    And User verifies that link Book an accessible hotel is enabled
+    And User verifies that link Book a hotel room or a group of rooms is enabled
+    And User verifies that link Hotel payment options is enabled
+    And User verifies that link Accessibility definitions is enabled
+    And User verifies that link 'Private host' listings is enabled
+    And User verifies that link Write a hotel review is enabled
+
+    And User verifies that link Bad weather and travel disruptions is enabled
+
+
+
 Verify all links under “Refunds and Charges” heading are enabled
 Verify all links under “Lodging” heading are enabled
 Verify all links under “Car” heading are enabled

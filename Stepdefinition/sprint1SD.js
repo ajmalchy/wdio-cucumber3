@@ -684,3 +684,57 @@ Then(/^User verifies that option "([^"]*)" under Shop travel are enabled$/, asyn
     // Verify that the option is enabled
     expect(isShopTravelOptionEnabled).to.be.true(`Option "${option}" under Shop travel is not enabled.`);
 });
+
+Then(/^User verifies that Welcome to Help Center heading is displayed$/, async () => {
+    
+    await browser.pause(5000);
+    const isWelcomeHeadingDisplayed = await csPage.isWelcomeHeadingDisplayed();
+    expect(isWelcomeHeadingDisplayed).to.be.true;
+});
+
+When(/^User clicks More btn under "([^"]*)" heading$/, async (headingName) => {
+   
+    switch (headingName) {
+        case 'Refund and Charges':
+            await csPage.clickMoreOptions(headingName);
+            await browser.pause(5000);
+            break;
+        case 'Lodging':
+            await csPage.clickMoreOptions(headingName);
+            await browser.pause(5000);
+            break;
+        case 'Car':
+            await csPage.clickMoreOptions(headingName);
+            await browser.pause(5000);
+            break;
+        case 'Account':
+            await csPage.clickMoreOptions(headingName);
+            await browser.pause(5000);
+            break;
+        case 'Privacy':
+        await csPage.clickMoreOptions(headingName);
+        await browser.pause(5000);
+        break;
+
+        case 'Security':
+        await csPage.clickMoreOptions(headingName);
+        await browser.pause(5000);
+        break;
+
+        case 'Loyalty & Rewards':
+        await csPage.clickMoreOptions(headingName);
+        await browser.pause(5000);
+        break;
+    }
+   
+}); 
+
+Then(/^User verifies that link (+.) is enabled$/, async (linkName) => {
+    
+    // Call the function to check if the specified option is enabled
+    const isLinkEnabled = await csPage.isLinkEnabled(linkName);
+    
+    // Verify that the option is enabled
+    expect(isLinkEnabled).to.be.true(`Option "${linkName}" under Shop travel is not enabled.`);
+  
+});
